@@ -46,11 +46,16 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static images
-app.use('/images', express.static(path.join(__dirname, '../client/images')));
-
-// Serve React build files
-app.use(express.static(path.join(__dirname, '../client')));
+// Serve static files from the client dist directory
+app.use(express.static(path.join(__dirname, '../client/dist'), {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.js')) {
+      res.set('Content-Type', 'application/javascript');
+    } else if (path.endsWith('.jsx')) {
+      res.set('Content-Type', 'application/javascript');
+    }
+  }
+}));
 
 // Routes
 app.use('/api/users', userRoutes);
@@ -59,7 +64,7 @@ app.use('/api/chat', chatRoutes);
 
 // Catch-all handler to send back React's index.html file for any request that doesn't match the above routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/index.html'));
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
 // Socket.IO connection
