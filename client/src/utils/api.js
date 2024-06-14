@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const baseURL = 'http://localhost:5051/api'; // Base URL for API calls
+const baseURL = process.env.NODE_ENV === 'production'
+  ? process.env.REACT_APP_API_URL_PRODUCTION
+  : process.env.REACT_APP_API_URL_DEVELOPMENT;
 
 // Function to register a user
 export const registerUser = async (userData) => {
