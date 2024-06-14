@@ -50,7 +50,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/images', express.static(path.join(__dirname, '../client/images')));
 
 // Serve React build files
-app.use(express.static(path.join(__dirname, '../client/build')));
+app.use(express.static(path.join(__dirname, '../client')));
 
 // Routes
 app.use('/api/users', userRoutes);
@@ -59,7 +59,7 @@ app.use('/api/chat', chatRoutes);
 
 // Catch-all handler to send back React's index.html file for any request that doesn't match the above routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+  res.sendFile(path.join(__dirname, '../client/index.html'));
 });
 
 // Socket.IO connection
