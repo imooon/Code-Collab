@@ -1,16 +1,12 @@
-
-
-
 import React, { useState, useEffect } from 'react';
-import io from 'socket.io-client';
 import { getChatMessages } from '../../utils/api';
+import socket from '../../socket';
 import './Chat.css';
-const socket = io('http://localhost:5051', {
-  withCredentials: true,
-});
+
 const Chat = ({ userId, recipientId }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+
   useEffect(() => {
     // Fetch chat history
     const fetchMessages = async () => {
@@ -21,17 +17,23 @@ const Chat = ({ userId, recipientId }) => {
         console.error('Error fetching chat messages:', error);
       }
     };
+
     fetchMessages();
+
     const handleReceiveMessage = (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     };
+
     socket.on('receiveMessage', handleReceiveMessage);
+
     socket.emit('joinRoom', { userId, recipientId });
+
     return () => {
       socket.off('receiveMessage', handleReceiveMessage);
       socket.emit('leaveRoom', { userId, recipientId });
     };
   }, [userId, recipientId]);
+
   const handleSendMessage = async () => {
     if (newMessage.trim()) {
       const messageData = { sender: userId, recipient: recipientId, message: newMessage.trim() };
@@ -39,6 +41,7 @@ const Chat = ({ userId, recipientId }) => {
       setNewMessage(''); // Clear the input field immediately
     }
   };
+
   return (
     <div>
       <div className="chat-messages">
@@ -59,4 +62,5 @@ const Chat = ({ userId, recipientId }) => {
     </div>
   );
 };
+
 export default Chat;
