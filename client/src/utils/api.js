@@ -4,6 +4,8 @@ const baseURL = process.env.REACT_APP_API_URL;
 
 if (!baseURL) {
   console.error('API URL is not defined. Please check your environment variables.');
+} else {
+  console.log('API URL:', baseURL);
 }
 
 // Function to register a user
